@@ -1,8 +1,8 @@
 import React, {useContext, useState} from 'react';
-import {clearPoints} from "../api/points";
-import {AuthContext} from "../context/AuthContext";
+import {clearPoints} from "../../api/points";
+import {AuthContext} from "../../context/AuthContext";
 
-const FormInput = ({onSubmit}) => {
+const PointsForm = ({onSubmit}) => {
     const [x, setX] = useState(null);
     const [y, setY] = useState("");
     const [r, setR] = useState(null);
@@ -99,4 +99,4 @@ const FormInput = ({onSubmit}) => {
     );
 };
 
-export default FormInput;
+export default PointsForm;
