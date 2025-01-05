@@ -38,6 +38,7 @@ export const clearPoints = async (token) => {
         });
     } catch (error) {
         handleResponseError(error);
+        throw error;
     }
 }
 
