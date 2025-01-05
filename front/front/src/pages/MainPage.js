@@ -1,7 +1,7 @@
 import React, {useContext, useState} from "react";
 import Graph from "../components/GraphicComp";
 import PointsTable from "../components/PointsTable";
-import FormInput from "../components/FormInput";
+import PointsForm from "../components/forms/PointsForm";
 import {checkPoint} from "../api/points";
 import {AuthContext} from "../context/AuthContext";
 
@@ -16,7 +16,7 @@ const MainPage = () => {
 
     return (
         <>
-            <FormInput onSubmit={handleAddPoint} />
+            <PointsForm onSubmit={handleAddPoint} />
             <Graph points={points} setPoints={setPoints} />
             <PointsTable points={points} />
         </>

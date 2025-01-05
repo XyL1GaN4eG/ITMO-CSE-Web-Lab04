@@ -2,9 +2,9 @@ import React, {useContext, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {AuthContext} from "../context/AuthContext";
 import {register} from "../api/auth";
+import AuthForm from "../components/forms/AuthForm";
 
 const RegisterPage = () => {
-    const {login} = useContext(AuthContext)
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
@@ -16,32 +16,28 @@ const RegisterPage = () => {
             const data = await register(username, password)
             if (data) {
                 console.log("успешная регистрация: ", data)
-                navigate("/main");
+                navigate("/");
             }
-        } catch (e) {
-            console.error("Ошибка при регистрации: ", e);
+        } catch (error) {
+            console.error("Ошибка при регистрации: ", error);
         }
     }
 
+    const handleLoginRedirect = () => {
+        navigate("/")
+    }
+
     return (
-        <>
-            <form onSubmit={handleSubmit}>
-                <input
-                    type="text"
-                    placeholder={"Придумайте свое имя"}
-                    value={username}
-                    onChange={(event) => setUsername(event.target.value)}
-                />
-                <input
-                    type="text"
-                    placeholder={"Придумайте пароль"}
-                    value={password}
-                    //todo: добавить требование при вводе чтобы пароль был сложный
-                    onChange={(event) => setPassword(event.target.value)}
-                />
-                <button type="submit">Зарегестрироваться</button>
-            </form>
-        </>
+        <AuthForm
+            username={username}
+            setUsername={setUsername}
+            password={password}
+            setPassword={setPassword}
+            handleSubmit={handleSubmit}
+            buttonText="Зарегистрироваться"
+            redirectText="Хотите войти в аккаунт?"
+            onRedirect={handleLoginRedirect}
+        />
     )
 }
 

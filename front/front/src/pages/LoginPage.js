@@ -1,6 +1,7 @@
 import React, {useContext, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {AuthContext} from "../context/AuthContext";
+import AuthForm from "../components/forms/AuthForm";
 
 const LoginPage = () => {
     const {login} = useContext(AuthContext)
@@ -24,29 +25,23 @@ const LoginPage = () => {
         }
     }
 
-    const handleRegisterRedirect = () =>{
+    const handleRegisterRedirect = () => {
         navigate("/register");
     }
 
     return (
         <>
-            <form onSubmit={handleSubmit}>
-                <input
-                    type="text"
-                    placeholder="Логин"
-                    value={username}
-                    onChange={(event) => setUsername(event.target.value)}
-                />
-                <input
-                    type="password"
-                    //todo: добавить скрытие и показывание пароля
-                    placeholder="Пароль"
-                    value={password}
-                    onChange={(event) => setPassword(event.target.value)}
-                />
-                <button type="submit">Войти</button>
-            </form>
-            <button onClick={handleRegisterRedirect}>"Хотите зарегестрироваться?"</button>
+            <AuthForm
+                username={username}
+                setUsername={setUsername}
+                password={password}
+                setPassword={setPassword}
+                handleSubmit={handleSubmit}
+                buttonText="Войти"
+                redirectText="Хотите зарегистрироваться?"
+                onRedirect={handleRegisterRedirect}
+            />
+
         </>
     )
 }
