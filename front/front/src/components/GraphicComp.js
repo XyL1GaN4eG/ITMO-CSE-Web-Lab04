@@ -1,5 +1,4 @@
 import React, {useContext, useEffect, useState} from "react";
-import {useNavigate} from "react-router-dom";
 import {AuthContext} from "../context/AuthContext";
 import {getAllPoints as apiGetAllPoints, checkPoint as apiCheckPoint, checkPoint} from "../api/points";
 /*

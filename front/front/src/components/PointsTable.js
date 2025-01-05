@@ -1,6 +1,5 @@
 import React from 'react';
 
-// Компонент для отображения данных точек в таблице
 const PointsTable = ({ points }) => {
     return (
         <table>

@@ -8,14 +8,14 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [token, setToken] = useState(localStorage.getItem("token") || null);
 
-    const login = async (username, password, token) => {
+    const login = async (username, password) => {
         try {
             //todo: возможно стоит
             const token = await apiLogin(username, password);
-            // Сохраняем в состоянии
+            // Сохраняем токен в состоянии
             setToken(token)
             // Сохраняем токен в локалсторадж чтобы при перезагрузке сессия не вылетела
-            localStorage.setItem("token", token.token);
+            localStorage.setItem("token", token);
 
             return true;
         } catch (error) {
