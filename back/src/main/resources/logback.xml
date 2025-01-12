@@ -1,0 +1,10 @@
+<logging>
+    <logger category="org.jboss.as" level="DEBUG"/>
+    <root-logger>
+        <level name="INFO"/>
+        <handlers>
+            <handler name="CONSOLE"/>
+            <handler name="FILE"/>
+        </handlers>
+    </root-logger>
+</logging>
