@@ -26,7 +26,7 @@ export const login = async (username, password) => {
 
 export const register = async (username, password) => {
     try {
-        const response = await axios.post(`${BACKEND_URL}/auth/register`, { username, password });
+         await axios.post(`${BACKEND_URL}/auth/register`, {username, password});
         return true; // Возвращаем заголовки, если всё прошло успешно
     } catch (error) {
         if (error.response) {
