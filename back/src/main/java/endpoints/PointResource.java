@@ -9,6 +9,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import lombok.extern.slf4j.Slf4j;
 import model.Point;
+import repository.UserRepository;
 import service.PointsService;
 
 @Stateless // - ejb не хранит состояния между вызовами
@@ -19,6 +20,8 @@ import service.PointsService;
 public class PointResource {
     @Inject
     private PointsService pointsService;
+    @Inject
+    private UserRepository userRepository;
 
     @PostConstruct
     void init() {
@@ -30,7 +33,7 @@ public class PointResource {
         log.info("Получен запрос на получение всех точек.");
         try {
             var token = extractToken(authHeader);
-            var points = pointsService.getAllPoints(token);
+            var points = pointsService.getAllPoints(userRepository.findByToken(token).getUserId().toString());
             log.info("Успешно получены {} точек для токена: {}", points.size(), token);
             return Response.ok(points).build();
         } catch (Exception e) {
