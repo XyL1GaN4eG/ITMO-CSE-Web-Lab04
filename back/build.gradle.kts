@@ -12,23 +12,23 @@ repositories {
 }
 
 dependencies {
-    implementation("com.google.code.gson:gson:2.11.0")
-    // https://mvnrepository.com/artifact/jakarta.platform/jakarta.jakartaee-api
-    compileOnly("jakarta.platform:jakarta.jakartaee-api:11.0.0-M4")
-    // https://mvnrepository.com/artifact/org.postgresql/postgresql
     implementation("org.postgresql:postgresql:42.7.4")
-    // https://mvnrepository.com/artifact/org.mongodb/mongodb-driver-sync
     implementation("org.mongodb:mongodb-driver-sync:5.2.1")
-    // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
-    implementation("org.slf4j:slf4j-api:2.0.16")
-    // https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
-    testImplementation("ch.qos.logback:logback-classic:1.5.15")
-    // todo: возможно не будет нормально билдится или что то такое так что если вдруг проблемы
-    //  то разбираться надо сразу с ло(м)б(о)ком
-    // https://mvnrepository.com/artifact/org.projectlombok/lombok
     compileOnly("org.projectlombok:lombok:1.18.36")
 
+    implementation("jakarta.ws.rs:jakarta.ws.rs-api:3.1.0")
+    implementation("jakarta.annotation:jakarta.annotation-api:3.0.0")
+    implementation("jakarta.enterprise:jakarta.enterprise.cdi-api:4.1.0")
+    implementation("jakarta.persistence:jakarta.persistence-api:3.2.0")
+    implementation("jakarta.inject:jakarta.inject-api:2.0.1")
+    implementation("jakarta.ejb:jakarta.ejb-api:4.0.1")
+
+
+    // SLF4J для логирования
+    implementation("org.slf4j:slf4j-api:2.0.16")
 }
+
+
 
 tasks.withType<War> {
     manifest {
@@ -45,10 +45,6 @@ tasks.withType<War> {
         .map(::zipTree)
     from(dependencies)
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-}
-
-tasks.withType<JavaCompile> {
-    options.compilerArgs.addAll(arrayOf("--release", "17"))
 }
 
 tasks.compileJava {

@@ -1,0 +1,1 @@
+scp build/libs/back-1.0-SNAPSHOT.war cloudru:/opt/wildfly-preview-26.1.3.Final/standalone/deployments/
