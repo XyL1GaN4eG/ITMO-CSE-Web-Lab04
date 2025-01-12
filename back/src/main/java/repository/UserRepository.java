@@ -7,16 +7,16 @@ import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import model.User;
 
-@Transactional // Автоматическое управление транзакциями
+import java.time.LocalDateTime;
+
+@Transactional
 @ApplicationScoped
 @Slf4j
-
-public class UserRepository {
+    public class UserRepository {
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    // Поиск пользователя по имени пользователя
     public User findByUsername(String username) {
         log.info("Попытка найти пользователя в бд с никнеймом: {}", username);
         try {
@@ -29,12 +29,10 @@ public class UserRepository {
         }
     }
 
-    // Обновление пользователя
     public void update(User user) {
         entityManager.merge(user); // merge используется для обновления существующих записей
     }
 
-    // Создание нового пользователя
     public void create(String username, String password) {
         User user = User.builder()
                 .username(username)
@@ -43,7 +41,6 @@ public class UserRepository {
         entityManager.persist(user); // persist используется для добавления новых записей
     }
 
-    // Проверка существования пользователя по имени пользователя
     public boolean existsByUsername(String username) {
         Long count = entityManager
                 .createQuery("SELECT COUNT(u) FROM User u WHERE u.username = :username", Long.class)
@@ -52,16 +49,14 @@ public class UserRepository {
         return count > 0;
     }
 
-    // Сохранение или обновление пользователя
     public void save(User user) {
         if (user.getUserId() == null) {
-            entityManager.persist(user); // Новый пользователь
+            entityManager.persist(user);
         } else {
-            entityManager.merge(user); // Обновление существующего пользователя
+            entityManager.merge(user);
         }
     }
 
-    // Поиск пользователя по токену
     public User findByToken(String token) {
         try {
             return entityManager
@@ -69,7 +64,12 @@ public class UserRepository {
                     .setParameter("token", token)
                     .getSingleResult();
         } catch (Exception e) {
-            return null; // Возвращаем null, если пользователь не найден
+            return null;
         }
+    }
+
+    public void updateTokenTime(User user) {
+        user.setTokenExpiration(LocalDateTime.now().plusMinutes(10));
+        log.info("Время действия токена обновлено у пользователя: {}", user);
     }
 }

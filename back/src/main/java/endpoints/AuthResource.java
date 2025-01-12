@@ -67,10 +67,4 @@ public class AuthResource {
             return Response.status(Response.Status.UNAUTHORIZED).entity(err.getMessage()).build();
         }
     }
-
-    @POST
-    @Path("/sosi")
-    public Response sosanie() {
-        return Response.ok().build();
-    }
 }
