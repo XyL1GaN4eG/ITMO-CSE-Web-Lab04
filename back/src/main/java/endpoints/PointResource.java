@@ -2,7 +2,6 @@ package endpoints;
 
 import exceptions.UnauthorizedException;
 import jakarta.annotation.PostConstruct;
-import jakarta.ejb.Init;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
@@ -75,7 +74,7 @@ public class PointResource {
     //todo: вынести в утил или еще чето такое
     private String extractToken(String authHeader) {
         log.info("Пытаемся извлечь токен из заголовка авторизации: {}", authHeader);
-        if (authHeader == null || !authHeader.startsWith("\"Bearer ")) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             log.error("Неверный токен или отсутствует заголовок авторизации.");
             throw new WebApplicationException("Invalid token", Response.Status.UNAUTHORIZED);
         }

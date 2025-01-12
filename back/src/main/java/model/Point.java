@@ -1,19 +1,27 @@
 package model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.bson.codecs.pojo.annotations.BsonId;
+import org.bson.codecs.pojo.annotations.BsonProperty;
 
 @Data
-@Entity
+@NoArgsConstructor
 public class Point {
-    @Id
-    private Long pointId;
-    private Long userId;
+    @BsonId
+    private String id;
+    @BsonProperty("x")
     private double x;
+    @BsonProperty("y")
     private double y;
+    @BsonProperty("r")
     private double r;
-    private boolean isIn;
+    @BsonProperty("userId")
+    private String userId;
+    @BsonProperty("executionTime")
+    private long executionTime;
+    @BsonProperty("attemptTime")
     private long attemptTime;
-    private double executionTime;
+    @BsonProperty()
+    private boolean isIn;
 }

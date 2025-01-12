@@ -36,9 +36,7 @@ public class PointsService {
             throw new UnauthorizedException("Зарегистрируйтесь или войдите в систему!");
         }
         if (user.getTokenExpiration().isAfter(LocalDateTime.now())) {
-            user.setTokenExpiration(LocalDateTime.now().plusMinutes(10));
-            userRepository.update(user);
-            log.info("Время действия токена обновлено у пользователя: {}", user);
+            userRepository.updateTokenTime(user);
         }
 
         var isIn = areaChecker.check(
@@ -48,12 +46,10 @@ public class PointsService {
         );
         log.debug("Результат проверки попадания в область: {}", isIn);
 
-        var executionTime = System.nanoTime() - startTime;
-        point.setExecutionTime(executionTime);
         point.setAttemptTime(attemptTime);
         point.setIn(isIn);
-        point.setUserId(user.getUserId());
-
+        point.setUserId(String.valueOf(user.getUserId()));
+        point.setExecutionTime(System.nanoTime() - startTime);
         pointsCollection.insertOne(point);
         log.info("Точка успешно добавлена: {}", point);
 
