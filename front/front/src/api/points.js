@@ -1,20 +1,21 @@
 import axios from "axios";
 
-const BACKEND_URL = "http://localhost:8080"; // Исправьте URL
+const BACKEND_URL = "http://213.171.27.51:8080/back-1.0-SNAPSHOT/api";
 
 export const getAllPoints = async (token) => {
     try {
         const response = await axios.get(`${BACKEND_URL}/points/`, {
             headers: {
-                Authorization: `Bearer ${token}` // Передаём токен в заголовок
+                Authorization: `Bearer ${token}`
             }
         });
-        return response.data; // Возвращаем данные с сервера
+        return response.data;
     } catch (error) {
         handleResponseError(error);
     }
 };
 
+//todo: добавить проверку на уже существование точки в браузере чтобы лишний раз не отправлялось
 export const checkPoint = async (token, point) => {
     try {
         const response = await axios.post(`${BACKEND_URL}/points/check`, point, {

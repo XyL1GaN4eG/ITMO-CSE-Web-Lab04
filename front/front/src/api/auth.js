@@ -1,8 +1,7 @@
 import axios from 'axios';
 
-//todo: поменять урл
 //todo: вынести куда то в статик или синглтон
-const BACKEND_URL = "http:/localhost:8080)))";
+const BACKEND_URL = "http://213.171.27.51:8080/back-1.0-SNAPSHOT/api";
 
 export const login = async (username, password) => {
     try {
