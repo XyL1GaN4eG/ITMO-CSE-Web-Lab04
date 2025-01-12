@@ -1,11 +1,13 @@
 package model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.bson.codecs.pojo.annotations.BsonId;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 import org.bson.types.ObjectId;
 
 @Data
+@NoArgsConstructor
 public class Point {
     @BsonId
     private ObjectId id;
@@ -23,7 +25,4 @@ public class Point {
     private long attemptTime;
     @BsonProperty()
     private boolean isIn;
-    public Point() {
-    } // Обязательный пустой конструктор
-
 }

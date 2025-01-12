@@ -26,6 +26,7 @@ let pointsByR = {}
 
 
 
+//todo: добавить перерисовку радиуса при смене
 const Graph = () => {
     useEffect(() => {
         drawGraph();
