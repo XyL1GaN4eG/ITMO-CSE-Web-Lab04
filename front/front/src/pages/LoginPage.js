@@ -13,7 +13,7 @@ const LoginPage = () => {
         event.preventDefault()
 
         try {
-            const data = await login(username, password)
+            let data = await login(username, password)
             if (data) {
                 console.log("успешная авторизация, получен токен: ", data)
                 navigate("/main");
