@@ -22,22 +22,17 @@ public class AuthService {
 
     public String login(String username, String password) throws UnauthorizedException {
         var user = userRepository.findByUsername(username);
-        log.info("Найден пользователь со следующими данными: {}", user);
         if (user == null) {
             throw new UnauthorizedException("Пользователя с таким никнеймом не существует");
         }
+        log.info("Найден пользователь со следующими данными: {}", user);
         if (!matchesPassword(password, user.getPassword())) {
             throw new UnauthorizedException("Неверный логин или пароль");
         }
-        if (user.getTokenExpiration().isBefore(LocalDateTime.now())) {
-            var token = UUID.randomUUID().toString();
-            user.setToken(token);
-            user.setTokenExpiration(LocalDateTime.now().plusMinutes(10));
-            userRepository.update(user);
-            return token;
-        } else {
-            return user.getToken();
-        }
+        if (user.getToken() == null || user.getTokenExpiration().isBefore(LocalDateTime.now()))
+            user.setToken(UUID.randomUUID().toString());
+        userRepository.updateTokenTime(user);
+        return user.getToken();
     }
 
     public void registration(String username, String password) throws UserAlreadyExistsException {
