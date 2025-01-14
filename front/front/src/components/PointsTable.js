@@ -19,8 +19,8 @@ const PointsTable = ({ points }) => {
                     <td>{point.x}</td>
                     <td>{point.y}</td>
                     <td>{point.r}</td>
-                    <td>{point.isIn ? 'Да' : 'Нет'}</td>
-                    <td>{point.serverTime}</td>
+                    <td>{point.in ? 'Да' : 'Нет'}</td>
+                    <td>{point.attemptTime}</td>
                     <td>{point.executionTime}</td>
                 </tr>
             ))}
