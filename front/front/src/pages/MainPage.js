@@ -9,8 +9,9 @@ const MainPage = () => {
     const [points, setPoints] = useState([]);
     const {token} = useContext(AuthContext);
     // Функция для добавления новой точки
-    const handleAddPoint = (point) => {
-        const responsePoint = checkPoint(token, point)
+    const handleAddPoint = async (point) => {
+        let responsePoint = await checkPoint(point);
+        console.log("Полученные данные: ", responsePoint);
         setPoints((prevPoints) => [...prevPoints, responsePoint]);
     };
 

@@ -2,11 +2,11 @@ import axios from "axios";
 
 const BACKEND_URL = "http://213.171.27.51:8080/back-1.0-SNAPSHOT/api";
 
-export const getAllPoints = async (token) => {
+export const getAllPoints = async () => {
     try {
         const response = await axios.get(`${BACKEND_URL}/points/`, {
             headers: {
-                Authorization: `Bearer ${token}`
+                Authorization: `Bearer ${localStorage.getItem("token")}`
             }
         });
         return response.data;
@@ -16,11 +16,11 @@ export const getAllPoints = async (token) => {
 };
 
 //todo: добавить проверку на уже существование точки в браузере чтобы лишний раз не отправлялось
-export const checkPoint = async (token, point) => {
+export const checkPoint = async (point) => {
     try {
         const response = await axios.post(`${BACKEND_URL}/points/check`, point, {
             headers: {
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
                 "Content-Type": "application/json"
             },
         });
@@ -30,11 +30,11 @@ export const checkPoint = async (token, point) => {
     }
 };
 
-export const clearPoints = async (token) => {
+export const clearPoints = async () => {
     try {
         await axios.delete(`${BACKEND_URL}/points/clear`, {
             headers: {
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${localStorage.getItem("token")}`
             },
         });
     } catch (error) {
