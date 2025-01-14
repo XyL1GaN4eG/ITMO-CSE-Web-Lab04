@@ -12,13 +12,19 @@ const max = 420;
 const l = (bottomEdge - topEdge) / 6;
 const mainColor = "#007BFF";
 
+let isInteractiveGraphSet = false;
+let r;
 const Graph = ({currentR}) => {
-    const {pointsByR, addPoint} = usePoints();
+    const {points, addPoint, setAllPoints} = usePoints();
 
     useEffect(() => {
         console.log("Текущее значение R:", currentR);
         drawGraph();
-        setupInteractiveGraphics();
+        r = currentR;
+        if (!isInteractiveGraphSet) {
+            setupInteractiveGraphics()
+            isInteractiveGraphSet = !isInteractiveGraphSet
+        }
     }, [currentR]);
 
 
@@ -75,18 +81,21 @@ const Graph = ({currentR}) => {
     }
 
     function drawAllDots(r) {
-        const canvas = document.getElementById("graphic");
-        const context = canvas.getContext("2d");
+        try {
+            if (!points[r]) {
+                points[r] = [];
+            }
+            let pointsForCurR = points[r];
+            console.log("Все точки для указанного R: ", pointsForCurR);
+            for (let i = 0; i <= pointsForCurR.length; i++) {
+                let curPoint = pointsForCurR[i];
+                console.log("Попытка нарисовать на графике точку: ", curPoint)//todo: заменить points[r][i] на переменную
 
-        if (pointsByR[r]) {
-            pointsByR[r].forEach((point) => {
-                drawDot(
-                    context,
-                    center + (point.x / r) * r * l,
-                    center - (point.y / r) * r * l,
-                    point.in ? "#0F0" : "#F00"
-                );
-            });
+                // noinspection JSSuspiciousNameCombination
+                drawDot(curPoint);
+            }
+        } catch (e) {
+            console.error("AAAAAAA", e)
         }
     }
 
@@ -104,8 +113,14 @@ const Graph = ({currentR}) => {
         context.stroke();
     }
 
-    function drawDot(context, x, y, color) {
-        context.fillStyle = color;
+    function drawDot(point) {
+        // console.log("Попытка нарисовать точку со следующими характеристиками")
+        let canvas = document.getElementById("graphic");
+        let context = canvas.getContext("2d")
+
+        let x = center + (point.x / r) * r * l;
+        let y = center - (point.y / r) * r * l;
+        context.fillStyle = point.in ? "#0F0" : "#F00";
         context.globalAlpha = 1;
         context.beginPath();
         context.arc(x, y, 4, 0, 2 * Math.PI);
@@ -119,7 +134,8 @@ const Graph = ({currentR}) => {
         canvas.addEventListener("click", async (e) => {
             const x = (e.offsetX - center) / l;
             const y = -(e.offsetY - center) / l;
-            const r = currentR; // Используем R из формы
+            // Используем R из формы
+            console.log("Текущий R=", r)
             console.log("Произошел клик с x=", x, ", y=", y, "r=", r);
 
             try {
@@ -128,16 +144,12 @@ const Graph = ({currentR}) => {
                     "Пришла точка после клика: ", point)
 
                 addPoint(r, point);
-                drawDot(
-                    canvas.getContext("2d"),
-                    center + (point.x / r) * r * l,
-                    center - (point.y / r) * r * l,
-                    point.in ? "#0F0" : "#F00"
-                );
+                drawDot(point);
             } catch (e) {
                 //todo: добавить реактовское уведомление об ошибке
                 console.error("Пришла ошибка с сервера: ", e);
-                return <Navigate to="/" />;
+                //fixme: редирект не работает
+                return <Navigate to="/"/>;
 
             }
         });

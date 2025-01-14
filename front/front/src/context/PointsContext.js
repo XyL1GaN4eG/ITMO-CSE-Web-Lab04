@@ -5,26 +5,22 @@ export const PointsContext = createContext();
 
 // Провайдер для точек
 export const PointsProvider = ({ children }) => {
-    const [pointsByR, setPointsByR] = useState([]); // Храним массив R и точек
+    const [points, setPoints] = useState([]); // Храним массив всех точек
 
-    const addPoint = (r, point) => {
-        setPointsByR((prev) => {
-            const existingR = prev.find((item) => item.r === r);
-            if (existingR) {
-                // Если R уже существует, добавляем точку в массив
-                return prev.map((item) =>
-                    item.r === r
-                        ? { ...item, points: [...item.points, point] }
-                        : item
-                );
-            }
-            // Если R еще нет, добавляем новый массив
-            return [...prev, { r, points: [point] }];
-        });
+    const addPoint = (r, newPoint) => {
+        if (!points[r]) {
+            points[r] = []
+        }
+        points[r].push(newPoint);
+        // setPoints((prev) => [...prev, newPoint]); // Добавляем новую точку
+    };
+
+    const setAllPoints = (allPoints) => {
+        setPoints(allPoints); // Устанавливаем массив точек
     };
 
     return (
-        <PointsContext.Provider value={{ pointsByR, addPoint }}>
+        <PointsContext.Provider value={{ points, addPoint, setAllPoints }}>
             {children}
         </PointsContext.Provider>
     );
