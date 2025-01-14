@@ -57,11 +57,12 @@ public class PointsService {
     }
 
     public void clear(String token) throws UnauthorizedException {
-        var userId = getUserByToken(token).getUserId();
+        var userId = getUserByToken(token).getUserId().toString();
         log.info("Удаление всех точек для пользователя с идентификатором: {}", userId);
-        var deleteResult = pointsCollection.deleteMany(Filters.eq("userId", userId));
-        log.info("Удалено {} точек для пользователя {}", deleteResult.getDeletedCount(), userId);
+        var countOfDeletedPoints = pointsCollection.deleteMany(Filters.eq("userId", userId)).getDeletedCount();
+        log.info("Удалено {} точек для пользователя {}", countOfDeletedPoints, userId);
     }
+
     private User getUserByToken(String token) throws UnauthorizedException {
         var user = userRepository.findByToken(token);
         //todo: перенести эту логику в userRepo
