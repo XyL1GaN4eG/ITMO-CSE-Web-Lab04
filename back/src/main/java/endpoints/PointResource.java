@@ -59,7 +59,7 @@ public class PointResource {
         }
     }
 
-    @POST
+    @DELETE
     @Path("/clear")
     public Response clearPoints(@HeaderParam("Authorization") String authHeader) {
         log.info("Получен запрос на очистку точек.");
