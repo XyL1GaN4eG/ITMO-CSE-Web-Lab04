@@ -1,26 +1,29 @@
 import React, { createContext, useState, useContext } from "react";
+import {all} from "axios";
 
 // Создаем контекст
 export const PointsContext = createContext();
 
 // Провайдер для точек
 export const PointsProvider = ({ children }) => {
-    const [points, setPoints] = useState([]); // Храним массив всех точек
-
+    let points = [];
+    const getPoints = () => {
+        return points;
+    }
     const addPoint = (r, newPoint) => {
-        if (!points[r]) {
-            points[r] = []
-        }
+        // if (!points[r]) {
+        //     points[r] = []
+        // }
         points[r].push(newPoint);
-        // setPoints((prev) => [...prev, newPoint]); // Добавляем новую точку
+        console.log("lol")
     };
 
     const setAllPoints = (allPoints) => {
-        setPoints(allPoints); // Устанавливаем массив точек
+        points = allPoints; // Устанавливаем массив точек
     };
 
     return (
-        <PointsContext.Provider value={{ points, addPoint, setAllPoints }}>
+        <PointsContext.Provider value={{usePoints, getPoints, addPoint, setAllPoints }}>
             {children}
         </PointsContext.Provider>
     );

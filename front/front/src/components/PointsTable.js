@@ -1,6 +1,8 @@
 import React from 'react';
+import {usePoints} from "../context/PointsContext";
 
 const PointsTable = ({points}) => {
+    const {pointsByR, addPoint} = usePoints();
     return (
         <table>
             <thead>
@@ -13,7 +15,7 @@ const PointsTable = ({points}) => {
                 <th>Время выполнения</th>
             </tr>
             </thead>
-            {/*<tbody>*/}
+            <tbody>
 
             {/*{*/}
             {/*    points.forEach((point, index) => (*/}
@@ -27,7 +29,7 @@ const PointsTable = ({points}) => {
             {/*        </tr>*/}
             {/*    ))*/}
             {/*}*/}
-            {/*</tbody>*/}
+            </tbody>
         </table>
     );
 };

@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {usePoints} from "../context/PointsContext";
+import {PointsProvider, usePoints} from "../context/PointsContext";
 import {checkPoint} from "../api/points";
 import {Navigate} from "react-router-dom";
 
@@ -15,21 +15,24 @@ const mainColor = "#007BFF";
 let isInteractiveGraphSet = false;
 let r;
 const Graph = ({currentR}) => {
-    const {points, addPoint, setAllPoints} = usePoints();
+    const {getPoints, addPoint} = usePoints();
 
     useEffect(() => {
         console.log("Текущее значение R:", currentR);
-        drawGraph();
+        if (currentR === 0 || currentR === undefined || currentR == null) {
+            currentR = 1;
+        }
         r = currentR;
+        drawGraph(r);
         if (!isInteractiveGraphSet) {
             setupInteractiveGraphics()
             isInteractiveGraphSet = !isInteractiveGraphSet
         }
     }, [currentR]);
 
-
+    //todo: вынести все функции на прорисовку графика в отдельный файл/еще куда то отсюда
     function drawGraph() {
-        const r = currentR; // Значение R синхронизировано с формой
+        // r = currentR; // Значение R синхронизировано с формой
         const canvas = document.getElementById("graphic");
         const context = canvas.getContext("2d");
 
@@ -81,17 +84,18 @@ const Graph = ({currentR}) => {
     }
 
     function drawAllDots(r) {
+        console.log("Попытка нарисовать все точки для указанного радиуса R: ", r,", ", getPoints()[r]);
         try {
-            if (!points[r]) {
-                points[r] = [];
+
+            if (!getPoints()[r]) {
+                getPoints()[r] = [];
             }
-            let pointsForCurR = points[r];
-            console.log("Все точки для указанного R: ", pointsForCurR);
+
+            let pointsForCurR = getPoints()[r];
+            console.log("Все точки для указанного R=", r, ": ", getPoints());
             for (let i = 0; i <= pointsForCurR.length; i++) {
                 let curPoint = pointsForCurR[i];
-                console.log("Попытка нарисовать на графике точку: ", curPoint)//todo: заменить points[r][i] на переменную
-
-                // noinspection JSSuspiciousNameCombination
+                console.log("Попытка нарисовать на графике точку: ", curPoint);
                 drawDot(curPoint);
             }
         } catch (e) {
@@ -138,19 +142,28 @@ const Graph = ({currentR}) => {
             console.log("Текущий R=", r)
             console.log("Произошел клик с x=", x, ", y=", y, "r=", r);
 
+            let point;
             try {
-                let point = await checkPoint({x, y, r})
+                point = await checkPoint({x, y, r});
                 console.log("" +
                     "Пришла точка после клика: ", point)
-
-                addPoint(r, point);
-                drawDot(point);
             } catch (e) {
                 //todo: добавить реактовское уведомление об ошибке
                 console.error("Пришла ошибка с сервера: ", e);
                 //fixme: редирект не работает
                 return <Navigate to="/"/>;
 
+            }
+
+            try {
+                console.log("Коллекция точек до добавления новой точки: ", getPoints());
+                console.log("Добавляю точку ", point, "в коллекцию для следующего R: ", r);
+                addPoint(r, point);
+                console.log("Коллекция точек после добавления новой: ", getPoints());
+
+                drawDot(point);
+            } catch (e) {
+                console.error("Произошла ошибка при добавлении точки в коллекцию: ", e)
             }
         });
     }
