@@ -7,7 +7,6 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (username, password) => {
         try {
-            //todo: возможно стоит
             const incomeToken = await apiLogin(username, password);
             localStorage.setItem("token", incomeToken);
             console.log(localStorage.getItem("token"))

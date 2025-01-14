@@ -1,17 +1,19 @@
-import React, {useContext, useState} from 'react';
+import React, {useState} from 'react';
 import {clearPoints} from "../../api/points";
-import {AuthContext} from "../../context/AuthContext";
 
-const PointsForm = ({onSubmit}) => {
+const PointsForm = ({onSubmit, setR, currentR}) => {
+    let r;
+    if (currentR == null) currentR = 1;
+    r = currentR;
     const [x, setX] = useState(null);
     const [y, setY] = useState("");
-    const [r, setR] = useState(null);
+    // const [r, setR] = useState(null);
     const [errors, setErrors] = useState({});
 
     const xValues = ['-5', '-4', '-3', '-2', '-1', '0', '1', '2', '3'];
-    const rValues = ['-5', '-4', '-3', '-2', '-1', '0', '1', '2', '3'];
+    const rValues = ['1', '2', '3', '4', '5'];
 
-    const {token} = useContext(AuthContext);
+    let token = localStorage.getItem("token");
 
     const validate = () => {
         const newErrors = {};
