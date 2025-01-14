@@ -1,12 +1,14 @@
 import axios from 'axios';
 
 //todo: вынести куда то в статик или синглтон
-const BACKEND_URL = "http://213.171.27.51:8080/back-1.0-SNAPSHOT/api";
+const BACKEND_URL = "http://213.171.27.51:8080/back-1.0-SNAPSHOT/api/auth";
 
 export const login = async (username, password) => {
     try {
-        const response = await axios.post(`${BACKEND_URL}/auth/login`, { username, password });
-        return response.data.token;
+        //todo: переписать с использованием гета
+        const response = await axios.post(`${BACKEND_URL}/login`, { username, password });
+        console.log("Пришел следующий ответ при попытке залогинится: ", response)
+        return response.data;
     } catch (error) {
         if (error.response) {
             // Сервер вернул ответ с ошибкой (например, 401, 403, 500)

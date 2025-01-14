@@ -28,7 +28,7 @@ public class AuthResource {
         log.info("AuthResource начал свою работу");
     }
 
-    @GET
+    @POST
     @Path("/login")
     public Response login(UserCredentials credentials) {
         log.info("Попытка входа для пользователя: {}", credentials.username());
@@ -40,7 +40,7 @@ public class AuthResource {
             log.info("Пользователь {} успешно вошел в систему", credentials.username());
             return Response.ok(token).build();
         } catch (UnauthorizedException unauthorizedException) {
-            log.error("Попытка несанкционированного доступа для пользователя: {}", credentials.username(), unauthorizedException);
+            log.error("Попытка несанкционированного доступа для пользователя: {}", credentials.username());
             return Response.status(Response.Status.UNAUTHORIZED).entity(unauthorizedException.getMessage()).build();
         } catch (DatabaseOperationException databaseOperationException) {
             log.error("Ошибка при работе с базой данных при входе пользователя: {}", credentials.username(), databaseOperationException);
