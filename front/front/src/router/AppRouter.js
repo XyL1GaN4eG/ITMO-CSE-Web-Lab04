@@ -11,8 +11,8 @@ const AppRouter = () => (
         <Route path="/" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage/>}/>
         //роутим таким образом чтобы пользователь не могу попасть если неавторизирован
-        {/*<Route path="/main" element={<PrivateRoute element={<MainPage />} />} />*/}
-        <Route path="/main" element={<MainPage/>} />
+        <Route path="/main" element={<PrivateRoute element={<MainPage />} />} />
+        {/*<Route path="/main" element={<MainPage/>} />*/}
     </Routes>
 );
 
