@@ -1,17 +1,6 @@
-import React, {useContext, useEffect, useState} from "react";
-import {AuthContext} from "../context/AuthContext";
-import {getAllPoints as apiGetAllPoints, checkPoint as apiCheckPoint, checkPoint} from "../api/points";
-/*
-todo:
-   Набор полей ввода для задания координат точки и радиуса
-    области в соответствии с вариантом задания:
-    Button {'-5','-4','-3','-2','-1','0','1','2','3'} для координаты по оси X,
-    Text (-3 ... 3) для координаты по оси Y,
-    и Button {'-5','-4','-3','-2','-1','0','1','2','3'} для задания радиуса области.
-    Если поле ввода допускает ввод заведомо некорректных данных
-    (таких, например, как буквы в координатах точки или отрицательный радиус),
-     то приложение должно осуществлять их валидацию.
- */
+import React, { useEffect } from "react";
+import { usePoints } from "../context/PointsContext";
+import {checkPoint} from "../api/points";
 
 const center = 210;
 const rightEdge = 410;

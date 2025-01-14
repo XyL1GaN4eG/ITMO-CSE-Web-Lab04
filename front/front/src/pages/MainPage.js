@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, {useState} from "react";
 import Graph from "../components/GraphicComp";
 import PointsTable from "../components/PointsTable";
 import PointsForm from "../components/forms/PointsForm";
