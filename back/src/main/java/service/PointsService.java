@@ -7,7 +7,9 @@ import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import model.Point;
+import model.User;
 import repository.UserRepository;
+import response.PointDTO;
 import util.AreaChecker;
 import config.MongoDBConfig;
 
@@ -26,47 +28,48 @@ public class PointsService {
 
     private final MongoCollection<Point> pointsCollection = MongoDBConfig.getPointsCollection();
 
-    public Point checkPoint(Point point, String token) {
+    //todo: добавить проверку на уже существование этой точки в бд
+    public PointDTO checkPoint(Point point, String token) throws UnauthorizedException {
         log.info("Начинается проверка точки: {}, с токеном: {}", point, token);
         var startTime = System.nanoTime();
-        var attemptTime = System.currentTimeMillis();
-        var user = userRepository.findByToken(token);
-        if (user == null) {
-            log.error("Не найден пользователь с токеном: {} ", token);
-            throw new UnauthorizedException("Зарегистрируйтесь или войдите в систему!");
-        }
-        if (user.getTokenExpiration().isAfter(LocalDateTime.now())) {
-            userRepository.updateTokenTime(user);
-        }
+        point.setAttemptTime(System.currentTimeMillis());
+        var user = getUserByToken(token);
 
         var isIn = areaChecker.check(
                 point.getX(),
                 point.getY(),
                 point.getR()
         );
-        log.debug("Результат проверки попадания в область: {}", isIn);
-
-        point.setAttemptTime(attemptTime);
         point.setIn(isIn);
         point.setUserId(String.valueOf(user.getUserId()));
         point.setExecutionTime(System.nanoTime() - startTime);
         pointsCollection.insertOne(point);
-        log.info("Точка успешно добавлена: {}", point);
-
-        return point;
+        return new PointDTO(point);
     }
 
-    public List<Point> getAllPoints(String userId) {
+    public List<PointDTO> getAllPoints(String token) throws UnauthorizedException {
+        var userId = getUserByToken(token).getUserId().toString();
         log.info("Получение всех точек для пользователя с идентификатором: {}", userId);
-        var points = new ArrayList<Point>();
-        pointsCollection.find(Filters.eq("userId", userId)).into(points);
-        log.info("Найдено {} точек для пользователя {}", points.size(), userId);
+        var points = new ArrayList<PointDTO>();
+        pointsCollection.find(Filters.eq("userId", userId))
+                .forEach(point -> points.add(new PointDTO(point)));
+        log.info("Найдено {} точек для пользователя {}: {}", points.size(), userId, points);
         return points;
     }
 
-    public void clear(String userId) {
+    public void clear(String token) throws UnauthorizedException {
+        var userId = getUserByToken(token).getUserId();
         log.info("Удаление всех точек для пользователя с идентификатором: {}", userId);
         var deleteResult = pointsCollection.deleteMany(Filters.eq("userId", userId));
         log.info("Удалено {} точек для пользователя {}", deleteResult.getDeletedCount(), userId);
+    }
+    private User getUserByToken(String token) throws UnauthorizedException {
+        var user = userRepository.findByToken(token);
+        //todo: перенести эту логику в userRepo
+        if (user == null) {
+            log.error("Не найден пользователь с токеном: {} ", token);
+            throw new UnauthorizedException("Зарегистрируйтесь или снова войдите в систему!");
+        }
+        return user;
     }
 }
