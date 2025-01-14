@@ -67,4 +67,14 @@ public class AuthResource {
             return Response.status(Response.Status.UNAUTHORIZED).entity(err.getMessage()).build();
         }
     }
+
+    @OPTIONS
+    public Response preflight() {
+        return Response.ok()
+                .header("Access-Control-Allow-Origin", "http://213.171.27.51:8080")
+                .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
+                .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
+                .build();
+    }
+
 }
