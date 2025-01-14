@@ -52,6 +52,7 @@ public class AuthService {
     }
 
     //регуляркой проверять на корректность юзернейм и пароль
+    @SuppressWarnings("unused")
     private boolean isValidCredentialsException(String username, String password) {
         //todo: add regex
         return true;

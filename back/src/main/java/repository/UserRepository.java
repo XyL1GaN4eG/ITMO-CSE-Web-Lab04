@@ -34,6 +34,7 @@ public class UserRepository {
         entityManager.merge(user); // merge используется для обновления существующих записей
     }
 
+    @SuppressWarnings("unused")
     public void create(String username, String password) {
         var user = User.builder()
                 .username(username)

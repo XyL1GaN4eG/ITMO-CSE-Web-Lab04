@@ -9,8 +9,6 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import lombok.extern.slf4j.Slf4j;
 import model.Point;
-import model.User;
-import repository.UserRepository;
 import service.PointsService;
 
 @Stateless // - ejb не хранит состояния между вызовами
@@ -22,8 +20,6 @@ import service.PointsService;
 public class PointResource {
     @Inject
     private PointsService pointsService;
-    @Inject
-    private UserRepository userRepository;
 
     @PostConstruct
     void init() {
