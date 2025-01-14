@@ -1,5 +1,6 @@
 package repository;
 
+import exceptions.UnauthorizedException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 @Transactional
 @ApplicationScoped
 @Slf4j
-    public class UserRepository {
+public class UserRepository {
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -34,7 +35,7 @@ import java.time.LocalDateTime;
     }
 
     public void create(String username, String password) {
-        User user = User.builder()
+        var user = User.builder()
                 .username(username)
                 .password(password)
                 .build();
@@ -74,6 +75,7 @@ import java.time.LocalDateTime;
 
     public void updateTokenTime(User user) {
         user.setTokenExpiration(LocalDateTime.now().plusMinutes(10));
+        update(user);
         log.info("Время действия токена обновлено у пользователя: {}", user);
     }
 }

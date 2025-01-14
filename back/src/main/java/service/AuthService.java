@@ -53,7 +53,7 @@ public class AuthService {
 
     //регуляркой проверять на корректность юзернейм и пароль
     private boolean isValidCredentialsException(String username, String password) {
-        //todo
+        //todo: add regex
         return true;
     }
 }

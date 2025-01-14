@@ -9,6 +9,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import lombok.extern.slf4j.Slf4j;
 import model.Point;
+import model.User;
 import repository.UserRepository;
 import service.PointsService;
 
@@ -17,6 +18,7 @@ import service.PointsService;
 @Produces(MediaType.APPLICATION_JSON) // - т.е. возвращает жсон
 @Consumes(MediaType.APPLICATION_JSON) // - т.е. получает жсоны
 @Slf4j
+//todo: убрать страшный стактрейс при истечения срока действия токена
 public class PointResource {
     @Inject
     private PointsService pointsService;
@@ -33,7 +35,7 @@ public class PointResource {
         log.info("Получен запрос на получение всех точек.");
         try {
             var token = extractToken(authHeader);
-            var points = pointsService.getAllPoints(userRepository.findByToken(token).getUserId().toString());
+            var points = pointsService.getAllPoints(token);
             log.info("Успешно получены {} точек для токена: {}", points.size(), token);
             return Response.ok(points).build();
         } catch (Exception e) {
@@ -44,6 +46,7 @@ public class PointResource {
 
     @POST
     @Path("/check")
+    //fixme: если токен недействительный, то возвращать ошибку
     public Response checkPoint(Point point, @HeaderParam("Authorization") String authHeader) {
         log.info("Получен запрос на проверку точки: {}", point);
         try {
@@ -51,8 +54,8 @@ public class PointResource {
             var checkedPoint = pointsService.checkPoint(point, token);
             log.info("Точка успешно проверена: {}", checkedPoint);
             return Response.ok(checkedPoint).build();
-        } catch (UnauthorizedException | jakarta.ejb.EJBTransactionRolledbackException exception) {
-            return Response.status(Response.Status.UNAUTHORIZED).entity(exception.getMessage()).build();
+        } catch (UnauthorizedException exception) {
+            return Response.status(Response.Status.UNAUTHORIZED).entity(exception.getCause()).build();
         } catch (Exception e) {
             log.error("Ошибка при проверке точки: {}", e.getMessage(), e);
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();

@@ -4,7 +4,6 @@ import exceptions.DatabaseOperationException;
 import exceptions.UnauthorizedException;
 import exceptions.UserAlreadyExistsException;
 import jakarta.annotation.PostConstruct;
-import jakarta.ejb.Init;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
@@ -50,6 +49,8 @@ public class AuthResource {
 
     @POST
     @Path("/reg")
+    //todo: добавить валидацию пароля и юзернейма на длину
+    //      можно использовать регулярки
     public Response registration(UserCredentials credentials) {
         log.info("Попытка регистрации для пользователя: {}", credentials.username());
         try {
