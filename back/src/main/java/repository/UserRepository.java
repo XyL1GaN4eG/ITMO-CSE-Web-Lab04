@@ -57,15 +57,19 @@ import java.time.LocalDateTime;
         }
     }
 
-    public User findByToken(String token) {
-        try {
-            return entityManager
-                    .createQuery("SELECT u FROM User u WHERE u.token = :token", User.class)
-                    .setParameter("token", token)
-                    .getSingleResult();
-        } catch (Exception e) {
-            return null;
-        }
+    public User findByToken(String token) throws UnauthorizedException {
+        User user = entityManager
+                .createQuery("SELECT u FROM User u WHERE u.token = :token", User.class)
+                .setParameter("token", token)
+                .getSingleResult();
+        if (user == null) throw new UnauthorizedException("Пользователь не найден по токену");
+
+        //todo: вынести проверку действительности токена в отдельный метод/класс
+        if (user.getTokenExpiration().isBefore(LocalDateTime.now())) throw new UnauthorizedException(
+                "Время действия токена истекло! Пожалуйста, войдите снова в свой аккаунт"
+        );
+        updateTokenTime(user);
+        return user;
     }
 
     public void updateTokenTime(User user) {
