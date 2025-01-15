@@ -19,13 +19,25 @@ const Graph = ({currentR}) => {
 
     useEffect(() => {
         console.log("Текущее значение R:", currentR);
-        drawGraph();
+        console.log("Текущие точки: ", JSON.stringify(points))
         r = currentR;
+        drawGraph();
         if (!isInteractiveGraphSet) {
             setupInteractiveGraphics()
             isInteractiveGraphSet = !isInteractiveGraphSet
         }
     }, [currentR]);
+
+    useEffect(() => {
+        try {
+            console.log("Попытка нарисовать последнюю точку: ", points)
+            currentR = r;
+            drawGraph()
+            drawDot(points[currentR].at(-1))
+        } catch (e) {
+            
+        }
+    }, [points])
 
 
     function drawGraph() {
