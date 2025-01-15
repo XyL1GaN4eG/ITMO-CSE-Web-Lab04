@@ -1,7 +1,10 @@
 import React, {useState} from 'react';
-import {clearPoints} from "../../api/points";
+import {checkPoint, clearPoints} from "../../api/points";
+import {usePoints} from "../../context/PointsContext";
 
 const PointsForm = ({onSubmit, setR, currentR}) => {
+    const {points, setAllPoints, addPoint} = usePoints();
+
     let r;
     if (currentR == null) currentR = 1;
     r = currentR;
@@ -29,10 +32,26 @@ const PointsForm = ({onSubmit, setR, currentR}) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        const check = async (x, y, r) => {
+            let responsePoint = await checkPoint({x, y, r});
+            console.log("Полученные данные: ", responsePoint);
+            addPoint(responsePoint);
+        };
 
         if (validate()) {
-            onSubmit({x, y: parseFloat(y), r});
-            setErrors({});
+            try {
+                let point = {
+                    "x": x.toString(),
+                    "y": y,
+                    "r": r.toString()
+                }
+                // point = JSON.stringify(point);
+                console.log("Пытаемся из формы проверить точку: ", point)
+                check(x, y, r)
+                setErrors({});
+            } catch (error) {
+                console.error("Ошибка при добавлении точки: ", error);
+            }
         }
     };
 
@@ -92,7 +111,7 @@ const PointsForm = ({onSubmit, setR, currentR}) => {
                 {errors.r && <p className="error">{errors.r}</p>}
             </div>
             <div>
-                <button type="submit">Отправить</button>
+                <button type="submit" onClick={handleSubmit}>Отправить</button>
                 <button type="button" onClick={handleClear}>
                     Очистить результаты
                 </button>

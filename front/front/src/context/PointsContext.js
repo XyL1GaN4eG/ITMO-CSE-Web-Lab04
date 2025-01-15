@@ -1,22 +1,25 @@
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useContext, useState } from "react";
 
-// Создаем контекст
-export const PointsContext = createContext();
+const PointsContext = createContext();
 
-// Провайдер для точек
 export const PointsProvider = ({ children }) => {
-    const [points, setPoints] = useState([]); // Храним массив всех точек
+    const [points, setPoints] = useState({});
 
-    const addPoint = (r, newPoint) => {
-        if (!points[r]) {
-            points[r] = []
-        }
-        points[r].push(newPoint);
-        // setPoints((prev) => [...prev, newPoint]); // Добавляем новую точку
+    const addPoint = (r, point) => {
+        setPoints(prev => ({
+            ...prev,
+            [r]: [...(prev[r] || []), point] // Создаём новый массив для r
+        }));
     };
 
     const setAllPoints = (allPoints) => {
-        setPoints(allPoints); // Устанавливаем массив точек
+        const groupedPoints = {};
+        allPoints.forEach(point => {
+            if (!groupedPoints[point.r]) groupedPoints[point.r] = [];
+            groupedPoints[point.r].push(point);
+        });
+
+        setPoints(groupedPoints); // Заменяем весь объект
     };
 
     return (
@@ -26,5 +29,4 @@ export const PointsProvider = ({ children }) => {
     );
 };
 
-// Хук для доступа к контексту
 export const usePoints = () => useContext(PointsContext);

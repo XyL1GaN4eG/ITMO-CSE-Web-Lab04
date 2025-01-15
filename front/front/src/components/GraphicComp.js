@@ -15,7 +15,7 @@ const mainColor = "#007BFF";
 let isInteractiveGraphSet = false;
 let r;
 const Graph = ({currentR}) => {
-    const {points, addPoint, setAllPoints} = usePoints();
+    const {points, addPoint} = usePoints();
 
     useEffect(() => {
         console.log("Текущее значение R:", currentR);
@@ -85,6 +85,7 @@ const Graph = ({currentR}) => {
             if (!points[r]) {
                 points[r] = [];
             }
+            console.log("Все точки: ", points)
             let pointsForCurR = points[r];
             console.log("Все точки для указанного R: ", pointsForCurR);
             for (let i = 0; i <= pointsForCurR.length; i++) {
@@ -141,10 +142,11 @@ const Graph = ({currentR}) => {
             try {
                 let point = await checkPoint({x, y, r})
                 console.log("" +
-                    "Пришла точка после клика: ", point)
+                    "Пришла точка после клика: ", JSON.stringify(point))
 
                 addPoint(r, point);
                 drawDot(point);
+                addRowToTable(point);
             } catch (e) {
                 //todo: добавить реактовское уведомление об ошибке
                 console.error("Пришла ошибка с сервера: ", e);
@@ -154,6 +156,36 @@ const Graph = ({currentR}) => {
             }
         });
     }
+    //todo: мб вынести куда нибудь?
+    function addRowToTable(rowData) {
+        const table = document.querySelector("table tbody");
+
+        // Указываем порядок ключей
+        const keysOrder = ["x", "y", "r", "in", "attemptTime", "executionTime"];
+
+        // Создаём новую строку
+        const row = document.createElement("tr");
+
+        // Итерируем по указанному порядку ключей
+        keysOrder.forEach((key) => {
+            const cell = document.createElement("td");
+
+            // Преобразуем значения для читабельности
+            if (key === "attemptTime") {
+                cell.textContent = new Date(rowData[key]).toLocaleString();
+            } else if (key === "in") {
+                cell.textContent = rowData[key] ? "Да" : "Нет";
+            } else {
+                cell.textContent = rowData[key];
+            }
+
+            row.appendChild(cell);
+        });
+
+        // Добавляем строку в таблицу
+        table.appendChild(row);
+    }
+
 
     return (
         <div className="graph">
