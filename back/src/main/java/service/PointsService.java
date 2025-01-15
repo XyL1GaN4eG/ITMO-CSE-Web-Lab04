@@ -15,6 +15,7 @@ import config.MongoDBConfig;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Stateless
@@ -46,15 +47,25 @@ public class PointsService {
         return new PointDTO(point);
     }
 
-    public List<PointDTO> getAllPoints(String token) throws UnauthorizedException {
+    public List<List<PointDTO>> getAllPoints(String token) throws UnauthorizedException {
         var userId = getUserByToken(token).getUserId().toString();
         log.info("Получение всех точек для пользователя с идентификатором: {}", userId);
-        var points = new ArrayList<PointDTO>();
-        pointsCollection.find(Filters.eq("userId", userId))
-                .forEach(point -> points.add(new PointDTO(point)));
+
+        // Получение всех точек пользователя
+        var points = new ArrayList<Point>();
+        pointsCollection.find(Filters.eq("userId", userId)).into(points);
         log.info("Найдено {} точек для пользователя {}: {}", points.size(), userId, points);
-        return points;
+
+        // Группировка точек по значению R и преобразование в List<List<PointDTO>>
+        var groupedPoints = points.stream()
+                .map(PointDTO::new) // Преобразуем в DTO
+                .collect(Collectors.groupingBy(PointDTO::getR)) // Группируем по R
+                .values(); // Получаем коллекцию списков
+
+        // Преобразуем Collection<List<PointDTO>> в List<List<PointDTO>>
+        return new ArrayList<>(groupedPoints);
     }
+
 
     public void clear(String token) throws UnauthorizedException {
         var userId = getUserByToken(token).getUserId().toString();
