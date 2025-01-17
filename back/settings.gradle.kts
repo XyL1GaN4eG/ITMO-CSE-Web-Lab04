@@ -10,4 +10,4 @@ pluginManagement {
         id(quarkusPluginId) version quarkusPluginVersion
     }
 }
-rootProject.name="lab4"
+rootProject.name="ITMO-CSE-Web-Lab04"

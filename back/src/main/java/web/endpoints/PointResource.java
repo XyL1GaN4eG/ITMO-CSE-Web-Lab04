@@ -34,6 +34,9 @@ public class PointResource {
             var points = pointsService.getAllPoints(token);
             log.info("Успешно получены {} точек для токена: {}", points.size(), token);
             return Response.ok(points).build();
+        } catch (UnauthorizedException unauthorizedException) {
+            log.error(unauthorizedException.getLocalizedMessage());
+            return Response.status(Response.Status.UNAUTHORIZED).entity(unauthorizedException.getMessage()).build();
         } catch (Exception e) {
             log.error("Ошибка при получении всех точек: {}", e.getMessage(), e);
             return Response.status(Response.Status.UNAUTHORIZED).entity(e.getMessage()).build();

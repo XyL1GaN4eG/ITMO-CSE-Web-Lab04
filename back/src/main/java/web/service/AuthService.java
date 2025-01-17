@@ -1,5 +1,6 @@
 package web.service;
 
+import io.quarkus.agroal.DataSource;
 import jakarta.enterprise.context.ApplicationScoped;
 import web.exceptions.DatabaseOperationException;
 import web.exceptions.InvalidCredentialsException;

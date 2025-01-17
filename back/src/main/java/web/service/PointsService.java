@@ -47,7 +47,7 @@ public class PointsService {
     public List<PointDTO> getAllPoints(String token) throws UnauthorizedException {
         var userId = getUserByToken(token).getUserId().toString();
         log.info("Получение всех точек для пользователя с идентификатором: {}", userId);
-        var points = mongoRepository.getAll(userId);
+        var points = mongoRepository.getAllByUserId(userId);
         log.info("Найдено {} точек для пользователя {}: {}", points.size(), userId, points);
         return points;
     }

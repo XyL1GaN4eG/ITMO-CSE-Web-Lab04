@@ -1,2 +1,2 @@
-@io.quarkus.hibernate.orm.PersistenceUnit("archivepoints")
+//@io.quarkus.hibernate.orm.PersistenceUnit("archivepoints")
 package web.repository.archiveRepo;

@@ -3,6 +3,7 @@ package web.repository.userRepo;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceUnit;
 import jakarta.transaction.Transactional;
 import web.exceptions.UnauthorizedException;
 import web.model.User;
@@ -11,11 +12,11 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
 
-@Transactional
 @ApplicationScoped
 @Slf4j
 public class UserRepository {
     @Inject
+//    @PersistenceUnit(name = "users")
     EntityManager entityManager;
 
     public User findByUsername(String username) {
@@ -34,7 +35,6 @@ public class UserRepository {
         entityManager.merge(user); // merge используется для обновления существующих записей
     }
 
-    @SuppressWarnings("unused")
     public void create(String username, String password) {
         var user = User.builder()
                 .username(username)
