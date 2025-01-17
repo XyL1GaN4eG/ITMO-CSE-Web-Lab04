@@ -1,1 +1,1 @@
-scp build/libs/back-1.0-SNAPSHOT.war cloudru:/opt/wildfly-preview-26.1.3.Final/standalone/deployments/
+scp build/quarkus-app/quarkus-run.jar cloudru:/home/xyl1gan4eg
