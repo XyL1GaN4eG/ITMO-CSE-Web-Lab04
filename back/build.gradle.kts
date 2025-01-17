@@ -22,6 +22,7 @@ dependencies {
     implementation("io.quarkus:quarkus-rest-jackson")
     implementation("io.quarkus:quarkus-jdbc-postgresql")
     implementation("io.quarkus:quarkus-arc")
+    implementation("io.quarkus:quarkus-narayana-jta")
     testImplementation("io.quarkus:quarkus-junit5")
     testImplementation("io.rest-assured:rest-assured")
     compileOnly("org.projectlombok:lombok:1.18.36")

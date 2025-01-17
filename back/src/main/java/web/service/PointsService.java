@@ -5,7 +5,7 @@ import web.exceptions.UnauthorizedException;
 import web.model.Point;
 import web.model.User;
 import web.repository.MongoRepository;
-import web.repository.UserRepository;
+import web.repository.userRepo.UserRepository;
 import web.response.PointDTO;
 import web.util.AreaChecker;
 

@@ -1,12 +1,12 @@
-package web.repository;
+package web.repository.userRepo;
 
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import web.exceptions.UnauthorizedException;
 import web.model.User;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
@@ -15,8 +15,8 @@ import java.time.LocalDateTime;
 @ApplicationScoped
 @Slf4j
 public class UserRepository {
-    @PersistenceContext
-    private EntityManager entityManager;
+    @Inject
+    EntityManager entityManager;
 
     public User findByUsername(String username) {
         log.info("Попытка найти пользователя в бд с никнеймом: {}", username);

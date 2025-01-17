@@ -6,7 +6,7 @@ import web.exceptions.InvalidCredentialsException;
 import web.exceptions.UnauthorizedException;
 import web.exceptions.UserAlreadyExistsException;
 import web.model.User;
-import web.repository.UserRepository;
+import web.repository.userRepo.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
