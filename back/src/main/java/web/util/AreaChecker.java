@@ -1,7 +1,6 @@
 package web.util;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Singleton;
 
 @ApplicationScoped
 public class AreaChecker {

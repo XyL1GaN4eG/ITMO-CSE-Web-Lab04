@@ -3,7 +3,6 @@ package web.repository;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import jakarta.enterprise.context.ApplicationScoped;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import web.config.MongoDBConfig;
 import web.model.Point;
