@@ -61,10 +61,16 @@ public class PointsService {
 
     //todo: перенести эту логику в userRepo
     private User getUserByToken(String token) throws UnauthorizedException {
+        log.info("Попытка найти пользователя в бд со следующим токеном: {}", token);
         try {
-            return userRepository.findByToken(token);
+            var user = userRepository.findByToken(token);
+            log.info("Нашли пользователя по токену: {}", user);
+            return user;
         } catch (NoResultException e) {
             log.error("Не найден пользователь с токеном: {} ", token);
+            throw new UnauthorizedException("Зарегистрируйтесь или снова войдите в систему!");
+        } catch (Exception e) {
+            log.error("Неизвестная ошибка при попытке найти пользователя с токеном {}: {}", token, e.getMessage(), e);
             throw new UnauthorizedException("Зарегистрируйтесь или снова войдите в систему!");
         }
     }

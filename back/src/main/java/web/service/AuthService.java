@@ -11,7 +11,6 @@ import web.model.User;
 import web.repository.userRepo.UserRepository;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 import java.util.UUID;
 
 import static web.util.PasswordUtil.hashPassword;
@@ -30,8 +29,10 @@ public class AuthService {
         }
         log.info("Найден пользователь со следующими данными: {}", user);
         if (!matchesPassword(password, user.getPassword())) {
+            log.error("Пароли у пользователя {} не совпали!", user);
             throw new UnauthorizedException("Неверный логин или пароль");
         }
+        log.info("Стоит ли пользователю обновить пароль? Токен нулл: {}, токен пропал: {}", user.getToken() == null, user.getTokenExpiration().isBefore(LocalDateTime.now()));
         if (user.getToken() == null || user.getTokenExpiration().isBefore(LocalDateTime.now()))
             user.setToken(UUID.randomUUID().toString());
         userRepository.save(user);
@@ -39,7 +40,8 @@ public class AuthService {
     }
 
     public void registration(String username, String password) throws UserAlreadyExistsException {
-        if (!Objects.equals(userRepository.findByUsername(username), new User())) {
+        if (userRepository.findByUsername(username) != null) {
+            log.error("При регистрации ошибка: пользователь с никнеймом {} уже существует: {}", username, userRepository.findByUsername(username));
             throw new UserAlreadyExistsException("Пользователь с таким именем уже существует");
         }
         if (!isValidCredentialsException(username, password)) {

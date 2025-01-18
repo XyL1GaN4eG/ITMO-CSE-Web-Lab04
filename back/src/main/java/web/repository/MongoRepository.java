@@ -39,7 +39,7 @@ public class MongoRepository {
     }
 
     //todo: может сделать как то по красивее?
-    public void deleteByPoint(Point point) {
+    public void delete(Point point) {
         log.info("Удаление точки из MongoDB: {}", point);
         try {
             pointsCollection.deleteOne(Filters.and(

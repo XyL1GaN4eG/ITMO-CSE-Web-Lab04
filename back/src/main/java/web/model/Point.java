@@ -23,6 +23,6 @@ public class Point {
     private long executionTime;
     @BsonProperty("attemptTime")
     private long attemptTime;
-    @BsonProperty()
+    @BsonProperty("isIn")
     private boolean isIn;
 }

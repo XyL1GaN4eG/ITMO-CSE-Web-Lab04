@@ -11,22 +11,23 @@ import java.util.List;
 @ApplicationScoped
 public class IntermediatePointsRepository implements PanacheRepository<IntermediatePoint> {
 
-    //todo: либо нормальный нейминг, либо разнести на два метода, а то чето принцип единой ответственности не соблюдается
+    private static final long EXPIRATION_TIME = 3 * 60 * 1000; // 3 минуты в миллисекундах
+
     public List<IntermediatePoint> findPointsByExpiration() {
-        log.info("Попытка найти список точек старше трех минут в промежуточной БД");
-        long expirationTime = System.currentTimeMillis() - 3 * 60 * 1000; // 3 минуты назад
+        log.info("Попытка найти список точек старше {} минут в промежуточной БД", EXPIRATION_TIME / 1000 / 60);
+        long expirationTime = System.currentTimeMillis() - EXPIRATION_TIME;
         List<IntermediatePoint> resultList = find("attemptTime < ?1", expirationTime).list();
-        log.info("Получили список точек старше трех минут в промежуточной БД: {}", resultList);
+        log.info("Получили список точек старше {} минут в промежуточной БД: {}", EXPIRATION_TIME / 1000 / 60, resultList);
         return resultList;
     }
 
 
+
     public void deleteArrayOfPoint(List<IntermediatePoint> points) {
         log.info("Попытка удалить следующие точки из промежуточной бд: {}", points);
-        //todo: возможно это можно переписать более лаконично используя паначи
-        for (IntermediatePoint point : points) {
-            delete(point);
-        }
+        // удаляем все точки, используя условие по id
+        delete("id in ?1", points.stream().map(IntermediatePoint::getId).toList());
     }
+
 
 }
