@@ -24,6 +24,7 @@ dependencies {
     implementation("io.quarkus:quarkus-arc")
     implementation("io.quarkus:quarkus-narayana-jta")
     implementation("io.quarkus:quarkus-scheduler")
+    implementation("io.quarkus:quarkus-hibernate-orm-panache")
     testImplementation("io.quarkus:quarkus-junit5")
     testImplementation("io.rest-assured:rest-assured")
     compileOnly("org.projectlombok:lombok:1.18.36")

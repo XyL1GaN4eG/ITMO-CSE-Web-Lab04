@@ -1,7 +1,8 @@
 package web.service;
 
-import io.quarkus.agroal.DataSource;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import lombok.extern.slf4j.Slf4j;
 import web.exceptions.DatabaseOperationException;
 import web.exceptions.InvalidCredentialsException;
 import web.exceptions.UnauthorizedException;
@@ -10,10 +11,8 @@ import web.model.User;
 import web.repository.userRepo.UserRepository;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
-
-import jakarta.inject.Inject;
-import lombok.extern.slf4j.Slf4j;
 
 import static web.util.PasswordUtil.hashPassword;
 import static web.util.PasswordUtil.matchesPassword;
@@ -35,12 +34,12 @@ public class AuthService {
         }
         if (user.getToken() == null || user.getTokenExpiration().isBefore(LocalDateTime.now()))
             user.setToken(UUID.randomUUID().toString());
-        userRepository.updateTokenTime(user);
+        userRepository.save(user);
         return user.getToken();
     }
 
     public void registration(String username, String password) throws UserAlreadyExistsException {
-        if (userRepository.existsByUsername(username)) {
+        if (!Objects.equals(userRepository.findByUsername(username), new User())) {
             throw new UserAlreadyExistsException("Пользователь с таким именем уже существует");
         }
         if (!isValidCredentialsException(username, password)) {

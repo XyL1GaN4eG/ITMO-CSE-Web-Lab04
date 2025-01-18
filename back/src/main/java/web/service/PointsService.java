@@ -1,6 +1,9 @@
 package web.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.NoResultException;
+import lombok.extern.slf4j.Slf4j;
 import web.exceptions.UnauthorizedException;
 import web.model.Point;
 import web.model.User;
@@ -11,8 +14,6 @@ import web.util.AreaChecker;
 
 import java.util.List;
 
-import jakarta.inject.Inject;
-import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @ApplicationScoped
 public class PointsService {
@@ -40,6 +41,7 @@ public class PointsService {
         point.setIn(isIn);
         point.setUserId(String.valueOf(user.getUserId()));
         point.setExecutionTime(System.nanoTime() - startTime);
+        log.info("Попытка добавить проверенную точку {} в mongodb", point);
         mongoRepository.add(point);
         return new PointDTO(point);
     }
@@ -59,11 +61,11 @@ public class PointsService {
 
     //todo: перенести эту логику в userRepo
     private User getUserByToken(String token) throws UnauthorizedException {
-        var user = userRepository.findByToken(token);
-        if (user == null) {
+        try {
+            return userRepository.findByToken(token);
+        } catch (NoResultException e) {
             log.error("Не найден пользователь с токеном: {} ", token);
             throw new UnauthorizedException("Зарегистрируйтесь или снова войдите в систему!");
         }
-        return user;
     }
 }
